@@ -32,4 +32,13 @@ class PodTest < MiniTest::Test
     assert_equal('redis-master3', pod.metadata.name)
     assert_equal('dockerfile/redis', pod.spec.containers[0]['image'])
   end
+
+  def test_get_with_labels
+    stub_request(:get, /\/pods/)
+      .with(query: { 'labels' => 'foo=bar' })
+      .to_return(body: open_test_json_file('get_all_pods_b1.json'),
+                 status: 200)
+    client = Kubeclient::Client.new 'http://localhost:8080/api/', 'v1beta1'
+    client.get_pods(labels: 'foo=bar')
+  end
 end

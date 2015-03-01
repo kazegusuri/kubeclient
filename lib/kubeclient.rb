@@ -76,11 +76,13 @@ module Kubeclient
 
     ENTITIES.each do |entity|
       # get all entities of a type e.g. get_nodes, get_pods, etc.
-      define_method("get_#{entity.underscore.pluralize}") do
-        # TODO: labels support
+      define_method("get_#{entity.underscore.pluralize}") do |options = {}|
+        params = {}
+        params['labels'] = options[:labels] if options[:labels]
+
         # TODO: namespace support?
         response = handling_kube_exception do
-          rest_client[get_resource_name(entity)].get # nil, labels
+          rest_client[get_resource_name(entity)].get(params: params)
         end
 
         result = JSON.parse(response)

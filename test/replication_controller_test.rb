@@ -43,4 +43,13 @@ class ReplicationControllerTest < MiniTest::Test
     assert_equal(3, rc.spec.replicas)
     assert_equal('guestbook', rc.spec.selector.name)
   end
+
+  def test_get_with_labels
+    stub_request(:get, /\/replicationControllers/)
+      .with(query: { 'labels' => 'foo=bar' })
+      .to_return(body: open_test_json_file('get_all_replication_b1.json'),
+                 status: 200)
+    client = Kubeclient::Client.new 'http://localhost:8080/api/', 'v1beta1'
+    client.get_replication_controllers(labels: 'foo=bar')
+  end
 end

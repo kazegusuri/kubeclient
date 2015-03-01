@@ -42,4 +42,13 @@ class NodeTest < MiniTest::Test
     assert_equal('v1beta3', node.apiVersion)
     assert_equal('2015-01-22T14:20:08+02:00', node.metadata.creationTimestamp)
   end
+
+  def test_get_with_labels
+    stub_request(:get, /\/nodes/)
+      .with(query: { 'labels' => 'foo=bar' })
+      .to_return(body: open_test_json_file('get_all_nodes_b1.json'),
+                 status: 200)
+    client = Kubeclient::Client.new 'http://localhost:8080/api/', 'v1beta1'
+    client.get_nodes(labels: 'foo=bar')
+  end
 end

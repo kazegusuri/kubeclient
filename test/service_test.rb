@@ -31,6 +31,15 @@ class ServiceTest < MiniTest::Test
     assert_equal 'apiserver', mock.labels.component
   end
 
+  def test_get_with_labels
+    stub_request(:get, /\/services/)
+      .with(query: { 'labels' => 'foo=bar' })
+      .to_return(body: open_test_json_file('get_all_services_b1.json'),
+                 status: 200)
+    client = Kubeclient::Client.new 'http://localhost:8080/api/', 'v1beta1'
+    client.get_services(labels: 'foo=bar')
+  end
+
   def test_construct_our_own_service
     our_service = Service.new
     our_service.id = 'redis-service'
