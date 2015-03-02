@@ -105,6 +105,13 @@ It is possible to interrupt the watcher from another thread with:
 <br>
 `watcher.finish` <br>
 
+8. Get entities filtered by labels <br>
+You can get entities which have specific labels:
+<br>
+`pods = client.get_pods(labels: 'name=redis-master')` <br>
+You can specify multiple labels and that returns entities which have both labels:  <br>
+`pods = client.get_pods(labels: 'name=redis-master,app=redis')`
+
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/kubeclient/fork )
